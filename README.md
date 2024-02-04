@@ -1,6 +1,8 @@
 # create-wih-app
 
-[![npm version](https://badgen.net/npm/v/create-wih-app)](https://npm.im/create-wih-app) [![npm downloads](https://badgen.net/npm/dm/create-wih-app)](https://npm.im/create-wih-app)
+![NPM Version](https://img.shields.io/npm/v/create-wih-app)
+![NPM Downloads](https://img.shields.io/npm/dw/create-wih-app)
+![GitHub License](https://img.shields.io/github/license/WarningImHack3r/create-wih-app)
 
 An opinionated type-safe SvelteKit starter.
 
@@ -11,6 +13,7 @@ An opinionated type-safe SvelteKit starter.
 </div>
 
 ## Usage
+
 ### npm
 
 ```sh
