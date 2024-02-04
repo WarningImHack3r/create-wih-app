@@ -1,0 +1,10 @@
+{
+    "extends": "./tsconfig.json",
+    "include": [
+        "src",
+        "tsup.config.ts",
+        "reset.d.ts",
+        ".eslintrc.js",
+        ".prettierrc.json"
+    ]
+}
