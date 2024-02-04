@@ -14,13 +14,19 @@ export function cancelHandler(text?: string) {
 
 export const packageManager = get_package_manager() ?? "npm";
 
+export function readPackageJson(cwd: string, directory: string) {
+	return JSON.parse(readFileSync(resolve(cwd, directory, "package.json"), "utf-8")) as PackageJson;
+}
+
 export async function editPackageJson(callback: (json: PackageJson) => void | Promise<void>) {
 	const filename = resolve(cwd(), "package.json");
 	const packageJson = readFileSync(filename, "utf-8");
 	const json = JSON.parse(packageJson) as PackageJson;
-	await Promise.resolve().then(() => callback(json)).then(() => {
-		writeFileSync(filename, JSON.stringify(json, null, /\t/.test(packageJson) ? "\t" : 2) + "\n");
-	});
+	await Promise.resolve()
+		.then(() => callback(json))
+		.then(() => {
+			writeFileSync(filename, JSON.stringify(json, null, /\t/.test(packageJson) ? "\t" : 2) + "\n");
+		});
 }
 
 function get_package_manager() {

@@ -17,7 +17,13 @@ import { basename, resolve } from "path";
 import { argv, chdir, cwd } from "process";
 import { init as tailwindInit } from "tailwindcss/lib/cli/init/index.js";
 import { fileURLToPath } from "url";
-import { bgSvelte, cancelHandler, editPackageJson, packageManager } from "./utils.js";
+import {
+	bgSvelte,
+	cancelHandler,
+	editPackageJson,
+	packageManager,
+	readPackageJson
+} from "./utils.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
@@ -25,8 +31,11 @@ async function main() {
 	console.clear();
 	console.log();
 
+	const packageJson = readPackageJson(__dirname, "..");
 	intro(
-		bgSvelte.white.bold(` ${process.env.npm_package_name} v${process.env.npm_package_version} `)
+		bgSvelte.white.bold(
+			` ${packageJson.name ?? "create-wih-app"} v${packageJson.version ?? "1.0.0"} `
+		)
 	);
 
 	const project = await group(
