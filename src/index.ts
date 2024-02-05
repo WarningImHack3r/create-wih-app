@@ -199,6 +199,10 @@ async function main() {
 		template: "skeleton"
 	});
 	chdir(project.appName);
+	writeFileSync(
+		resolve(cwd(), "README.md"),
+		`# ${project.appName}\n\nSvelteKit app bootstrapped with [create-wih-app](https://github.com/WarningImHack3r/create-wih-app).\n\n## Run the app\n\n\`\`\`sh\n${packageManager} dev\n\`\`\`\n`
+	);
 
 	s.message("Initializing a git repository");
 	try {
@@ -340,12 +344,43 @@ async function main() {
 		execSync(`${packageManager} install --save-dev ${additionalDeps.join(" ")}`);
 	}
 
+	// ESLint rules
+	if (project.features.includes("eslint")) {
+		s.message("Improving ESLint config file");
+		const eslintConfig = readFileSync(resolve(cwd(), ".eslintrc.cjs"), "utf-8");
+		writeFileSync(
+			resolve(cwd(), ".eslintrc.cjs"),
+			eslintConfig.replace(
+				"]\n};",
+				`],
+	rules: {
+		'@typescript-eslint/method-signature-style': ['error', 'property']
+	}
+};`
+			)
+		);
+	}
+
 	// Prettier
 	if (project.features.includes("prettier")) {
 		s.message("Improving Prettier config file and formatting files");
 		cpSync(resolve(__dirname, "../template/.prettierrc"), resolve(cwd(), ".prettierrc"), {
 			force: true
 		});
+		if (project.features.includes("tailwind")) {
+			// Add "prettier-plugin-tailwindcss" to Prettier config
+			const prettierConfig = readFileSync(resolve(cwd(), ".prettierrc"), "utf-8");
+			writeFileSync(
+				resolve(cwd(), ".prettierrc"),
+				prettierConfig.replace(
+					/"prettier-plugin-svelte"]/,
+					'"prettier-plugin-svelte", "prettier-plugin-tailwindcss"]'
+				).replace(
+					/'prettier-plugin-svelte']/,
+					"'prettier-plugin-svelte', 'prettier-plugin-tailwindcss']"
+				)
+			);
+		}
 		execSync(`${packageManager} format`);
 	}
 

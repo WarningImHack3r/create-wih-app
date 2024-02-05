@@ -12,6 +12,14 @@ An opinionated type-safe SvelteKit starter.
 
 </div>
 
+## Features
+
+- Choose between TypeScript and JavaScript with JSDoc
+- Out-of-the-box TailwindCSS setup, supporting TypeScript
+- Pre-configured ESLint and Prettier
+- Automation with Renovate, Husky, and GitHub Actions
+- ...and more!
+
 ## Usage
 
 ### npm
@@ -37,14 +45,6 @@ bun create wih-app@latest
 ```sh
 yarn create wih-app
 ```
-
-## Features
-
-- Choose between TypeScript and JavaScript with JSDoc
-- Out-of-the-box TailwindCSS setup, supporting TypeScript
-- Pre-configured ESLint and Prettier
-- Automation with Renovate, Husky, and GitHub Actions
-- ...and more!
 
 ## License
 
