@@ -12,7 +12,7 @@ import {
 import chalk from "chalk";
 import { execSync } from "child_process";
 import { create as createSvelte } from "create-svelte";
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "fs";
+import { existsSync, readdirSync } from "fs";
 import { basename, resolve } from "path";
 import { argv, chdir, cwd } from "process";
 import { init as tailwindInit } from "tailwindcss/lib/cli/init/index.js";
@@ -20,7 +20,10 @@ import { fileURLToPath } from "url";
 import {
 	bgSvelte,
 	cancelHandler,
-	editPackageJson,
+	copyFromTemplateToCwd,
+	createCwdFile,
+	editCwdFile,
+	editCwdPackageJson,
 	packageManager,
 	readPackageJson
 } from "./utils.js";
@@ -199,10 +202,9 @@ async function main() {
 		template: "skeleton"
 	});
 	chdir(project.appName);
-	writeFileSync(
-		resolve(cwd(), "README.md"),
-		`# ${project.appName}\n\nSvelteKit app bootstrapped with [create-wih-app](https://github.com/WarningImHack3r/create-wih-app).\n\n## Run the app\n\n\`\`\`sh\n${packageManager} dev\n\`\`\`\n`
-	);
+	editCwdFile("README.md", () => {
+		return `# ${project.appName}\n\nSvelteKit app bootstrapped with [create-wih-app](https://github.com/WarningImHack3r/create-wih-app).\n\n## Run the app\n\n\`\`\`sh\n${packageManager} dev\n\`\`\`\n`;
+	});
 
 	s.message("Initializing a git repository");
 	try {
@@ -213,7 +215,7 @@ async function main() {
 
 	// Install dependencies
 	s.message("Updating dependencies");
-	await editPackageJson(async json => {
+	await editCwdPackageJson(async json => {
 		json.version = "1.0.0";
 		async function latestVersion(name: string) {
 			return await fetch(`https://registry.npmjs.org/${name}/latest`)
@@ -258,18 +260,13 @@ async function main() {
 			cancelHandler("Error: TailwindCSS config not found");
 			return;
 		}
-		const tailwindConfig = readFileSync(resolve(cwd(), configPath), "utf-8");
-		writeFileSync(
-			resolve(cwd(), configPath),
-			tailwindConfig.replace("content: []", 'content: ["./src/**/*.{html,js,svelte,ts}"]')
-		);
+		editCwdFile(configPath, content => {
+			return content.replace("content: []", 'content: ["./src/**/*.{html,js,svelte,ts}"]');
+		});
 		// Create files
-		writeFileSync(
-			resolve(cwd(), "src/app.css"),
-			"@tailwind base;\n@tailwind components;\n@tailwind utilities;\n"
-		);
-		writeFileSync(
-			resolve(cwd(), "src/routes/+layout.svelte"),
+		createCwdFile("src/app.css", "@tailwind base;\n@tailwind components;\n@tailwind utilities;\n");
+		createCwdFile(
+			"src/routes/+layout.svelte",
 			`<script${project.typescript ? ' lang="ts"' : ""}>\n\timport "../app.css";\n</script>\n\n<slot />\n`
 		);
 		// Prettier plugin
@@ -287,55 +284,38 @@ async function main() {
 	// CI/CD
 	if (project.ci.includes("renovate")) {
 		s.message("Creating Renovate config file");
-		if (!existsSync(resolve(cwd(), ".github"))) {
-			mkdirSync(resolve(cwd(), ".github"));
-		}
-		cpSync(
-			resolve(__dirname, "../template/renovate.json"),
-			resolve(cwd(), ".github/renovate.json"),
-			{ force: true }
-		);
+		copyFromTemplateToCwd("renovate.json", ".github");
 	}
 	if (project.ci.includes("husky")) {
 		s.message("Setting up Husky");
 		// Install husky
-		await editPackageJson(json => {
+		await editCwdPackageJson(json => {
 			json.scripts = { ...(json.scripts ?? {}), prepare: "husky" };
 		});
 		additionalDeps.push("husky");
 		// Create husky scripts
-		if (!existsSync(resolve(cwd(), ".husky"))) {
-			mkdirSync(resolve(cwd(), ".husky"));
-		}
 		// pre-commit lint, post-checkout cleanup
-		writeFileSync(
-			resolve(cwd(), ".husky/pre-commit"),
+		createCwdFile(
+			".husky/pre-commit",
 			`FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')\n[ -z "$FILES" ] && exit 0\n\necho "$FILES" | xargs ${packageManager} format\n\necho "$FILES" | xargs git add\n`
 		);
-		writeFileSync(resolve(cwd(), ".husky/post-commit"), "git update-index -g\n");
-		writeFileSync(
-			resolve(cwd(), ".husky/post-checkout"),
+		createCwdFile(".husky/post-commit", "git update-index -g\n");
+		createCwdFile(
+			".husky/post-checkout",
 			`if [ "$3" == 1 ]; then\n\t${packageManager} install\n\tgit fetch -p\n\tnpx git-removed-branches -p -f\nfi\n`
 		);
 	}
 	if (project.ci.includes("pr-auto-assign")) {
 		s.message("Creating PR auto-assign workflow");
-		if (!existsSync(resolve(cwd(), ".github/workflows"))) {
-			mkdirSync(resolve(cwd(), ".github/workflows"), { recursive: true });
-		}
-		cpSync(
-			resolve(__dirname, "../template/pr-auto-assign.yml"),
-			resolve(cwd(), ".github/workflows/pr-auto-assign.yml"),
-			{ force: true }
-		);
+		copyFromTemplateToCwd("pr-auto-assign.yml", ".github/workflows");
 		const actionVersion = await fetch(
 			"https://api.github.com/repos/toshimaru/auto-author-assign/releases/latest"
 		)
 			.then(res => res.json() as Promise<{ tag_name: string }>)
 			.then(json => json.tag_name);
-		const file = readFileSync(resolve(cwd(), ".github/workflows/pr-auto-assign.yml"), "utf-8");
-		const newFile = file.replace(/%VERSION%/, actionVersion);
-		writeFileSync(resolve(cwd(), ".github/workflows/pr-auto-assign.yml"), newFile);
+		editCwdFile(".github/workflows/pr-auto-assign.yml", content => {
+			return content.replace(/%VERSION%/, actionVersion);
+		});
 	}
 
 	// Additional dependencies
@@ -347,39 +327,36 @@ async function main() {
 	// ESLint rules
 	if (project.features.includes("eslint")) {
 		s.message("Improving ESLint config file");
-		const eslintConfig = readFileSync(resolve(cwd(), ".eslintrc.cjs"), "utf-8");
-		writeFileSync(
-			resolve(cwd(), ".eslintrc.cjs"),
-			eslintConfig.replace(
+		const eslintConfig = readdirSync(cwd()).find(file => file.startsWith(".eslintrc"));
+		if (!eslintConfig) {
+			cancelHandler("Error: ESLint config not found");
+			return;
+		}
+		editCwdFile(eslintConfig, content => {
+			return content.replace(
 				"]\n};",
-				`],
-	rules: {
-		'@typescript-eslint/method-signature-style': ['error', 'property']
-	}
-};`
-			)
-		);
+				`],\n\trules: {\n\t\t'@typescript-eslint/method-signature-style': ['error', 'property']\n\t}\n};`
+			);
+		});
 	}
 
 	// Prettier
 	if (project.features.includes("prettier")) {
 		s.message("Improving Prettier config file and formatting files");
-		cpSync(resolve(__dirname, "../template/.prettierrc"), resolve(cwd(), ".prettierrc"), {
-			force: true
-		});
+		copyFromTemplateToCwd(".prettierrc", ".");
 		if (project.features.includes("tailwind")) {
 			// Add "prettier-plugin-tailwindcss" to Prettier config
-			const prettierConfig = readFileSync(resolve(cwd(), ".prettierrc"), "utf-8");
-			writeFileSync(
-				resolve(cwd(), ".prettierrc"),
-				prettierConfig.replace(
-					/"prettier-plugin-svelte"]/,
-					'"prettier-plugin-svelte", "prettier-plugin-tailwindcss"]'
-				).replace(
-					/'prettier-plugin-svelte']/,
-					"'prettier-plugin-svelte', 'prettier-plugin-tailwindcss']"
-				)
-			);
+			editCwdFile(".prettierrc", content => {
+				return content
+					.replace(
+						/"prettier-plugin-svelte"/,
+						'"prettier-plugin-svelte", "prettier-plugin-tailwindcss"'
+					)
+					.replace(
+						/'prettier-plugin-svelte']/,
+						"'prettier-plugin-svelte', 'prettier-plugin-tailwindcss']"
+					);
+			});
 		}
 		execSync(`${packageManager} format`);
 	}
