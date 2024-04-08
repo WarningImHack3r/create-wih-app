@@ -29,6 +29,6 @@ export default [
 		}
 	},
 	{
-		ignores: []
+		ignores: ["template/", "dist/"]
 	}
 ];
