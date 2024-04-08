@@ -327,15 +327,15 @@ async function main() {
 	// ESLint rules
 	if (project.features.includes("eslint")) {
 		s.message("Improving ESLint config file");
-		const eslintConfig = readdirSync(cwd()).find(file => file.startsWith(".eslintrc"));
+		const eslintConfig = readdirSync(cwd()).find(file => file === "eslint.config.js");
 		if (!eslintConfig) {
 			cancelHandler("Error: ESLint config not found");
 			return;
 		}
 		editCwdFile(eslintConfig, content => {
 			return content.replace(
-				"]\n};",
-				`],\n\trules: {\n\t\t'@typescript-eslint/method-signature-style': ['error', 'property']\n\t}\n};`
+				"{\n\t\tignores:",
+				`{\n\t\t"@typescript-eslint/method-signature-style": ["error", "property"],\n\t\t"@typescript-eslint/no-import-type-side-effects": "error"\n\t},\n\t{\n\t\tignores:`
 			);
 		});
 	}

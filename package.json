@@ -1,6 +1,6 @@
 {
 	"name": "create-wih-app",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "An opinionated type-safe SvelteKit starter",
 	"repository": {
 		"type": "git",
@@ -14,13 +14,7 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write ."
 	},
-	"keywords": [
-		"create-wih-app",
-		"svelte",
-		"sveltekit",
-		"typescript",
-		"tailwindcss"
-	],
+	"keywords": ["create-wih-app", "svelte", "sveltekit", "typescript", "tailwindcss"],
 	"engines": {
 		"node": ">=20.12.1"
 	},
