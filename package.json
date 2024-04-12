@@ -1,6 +1,6 @@
 {
 	"name": "create-wih-app",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "An opinionated type-safe SvelteKit starter",
 	"repository": {
 		"type": "git",
