@@ -22,7 +22,7 @@
 		"tailwindcss"
 	],
 	"engines": {
-		"node": ">=20.12.2"
+		"node": ">=20.15.0"
 	},
 	"exports": "./dist/index.js",
 	"bin": {
