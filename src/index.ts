@@ -335,7 +335,7 @@ async function main() {
 		editCwdFile(eslintConfig, content => {
 			return content.replace(
 				"{\n\t\tignores:",
-				`{\n\t\t"@typescript-eslint/method-signature-style": ["error", "property"],\n\t\t"@typescript-eslint/no-import-type-side-effects": "error"\n\t},\n\t{\n\t\tignores:`
+				`{\n\t\trules: {\n\t\t\t"@typescript-eslint/method-signature-style": ["error", "property"],\n\t\t\t"@typescript-eslint/no-import-type-side-effects": "error"\n\t\t}\n\t},\n\t{\n\t\tignores:`
 			);
 		});
 	}
