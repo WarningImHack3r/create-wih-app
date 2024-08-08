@@ -22,7 +22,7 @@
 		"tailwindcss"
 	],
 	"engines": {
-		"node": ">=20.15.0"
+		"node": ">=20.16.0"
 	},
 	"exports": "./dist/index.js",
 	"bin": {
@@ -34,19 +34,19 @@
 	"dependencies": {
 		"@clack/prompts": "^0.7.0",
 		"chalk": "^5.3.0",
-		"create-svelte": "^6.3.3",
-		"tailwindcss": "^3.4.4"
+		"create-svelte": "^6.3.5",
+		"tailwindcss": "^3.4.9"
 	},
 	"devDependencies": {
 		"@total-typescript/ts-reset": "^0.5.1",
-		"@types/eslint": "^8.56.10",
-		"@types/node": "^20.14.9",
-		"eslint": "^9.6.0",
+		"@types/eslint": "^8.56.11",
+		"@types/node": "^20.14.14",
+		"eslint": "^9.8.0",
 		"eslint-config-prettier": "^9.1.0",
-		"prettier": "^3.3.2",
-		"tsup": "^8.1.0",
-		"type-fest": "^4.21.0",
-		"typescript": "^5.5.3",
-		"typescript-eslint": "^7.15.0"
+		"prettier": "^3.3.3",
+		"tsup": "^8.2.4",
+		"type-fest": "^4.24.0",
+		"typescript": "^5.5.4",
+		"typescript-eslint": "^7.18.0"
 	}
 }
