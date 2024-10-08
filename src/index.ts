@@ -324,22 +324,6 @@ async function main() {
 		execSync(`${packageManager} install --save-dev ${additionalDeps.join(" ")}`);
 	}
 
-	// ESLint rules
-	if (project.features.includes("eslint")) {
-		s.message("Improving ESLint config file");
-		const eslintConfig = readdirSync(cwd()).find(file => file === "eslint.config.js");
-		if (!eslintConfig) {
-			cancelHandler("Error: ESLint config not found");
-			return;
-		}
-		editCwdFile(eslintConfig, content => {
-			return content.replace(
-				"{\n\t\tignores:",
-				`{\n\t\trules: {\n\t\t\t"@typescript-eslint/method-signature-style": ["error", "property"],\n\t\t\t"@typescript-eslint/no-import-type-side-effects": "error"\n\t\t}\n\t},\n\t{\n\t\tignores:`
-			);
-		});
-	}
-
 	// Prettier
 	if (project.features.includes("prettier")) {
 		s.message("Improving Prettier config file and formatting files");

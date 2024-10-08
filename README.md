@@ -48,4 +48,4 @@ yarn create wih-app
 
 ## License
 
-MIT &copy; [Antoine Lethimonnier](https://github.com/WarningImHack3r)
+MIT
