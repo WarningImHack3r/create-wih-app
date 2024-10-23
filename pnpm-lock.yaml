@@ -15,8 +15,8 @@ importers:
         specifier: ^5.3.0
         version: 5.3.0
       create-svelte:
-        specifier: ^6.3.12
-        version: 6.3.12
+        specifier: ^7.0.0
+        version: 7.0.0
       tailwindcss:
         specifier: ^3.4.13
         version: 3.4.13
@@ -551,8 +551,8 @@ packages:
     resolution: {integrity: sha512-I5qxpzLv+sJhTVEoLYNcTW+bThDCPsit0vLNKShZx6rLtpilNpmmeTPaeqJb9ZE9dV3DGaeby6Vuhrw38WjeyQ==}
     engines: {node: ^14.18.0 || >=16.10.0}
 
-  create-svelte@6.3.12:
-    resolution: {integrity: sha512-+9vAdltihwKhN3x4TDzvSsJ9Q7MsC0sckjNBDnVgXeJBmEHnT2xozvk4D95yhKB3kE8eHpOkoFkyRGXQACagAQ==}
+  create-svelte@7.0.0:
+    resolution: {integrity: sha512-+IGTDiF0Jlyu1//zf9pNBntTutE+a0VyYDi+bR2l8ApJLZWqYitv5MbhtzEe4XCjx3crooW65wsIP1KSQSZpug==}
     hasBin: true
 
   cross-spawn@7.0.3:
@@ -813,10 +813,6 @@ packages:
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
-
-  kleur@4.1.5:
-    resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
-    engines: {node: '>=6'}
 
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
@@ -1669,10 +1665,7 @@ snapshots:
 
   consola@3.2.3: {}
 
-  create-svelte@6.3.12:
-    dependencies:
-      '@clack/prompts': 0.7.0
-      kleur: 4.1.5
+  create-svelte@7.0.0: {}
 
   cross-spawn@7.0.3:
     dependencies:
@@ -1949,8 +1942,6 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
-
-  kleur@4.1.5: {}
 
   levn@0.4.1:
     dependencies:
