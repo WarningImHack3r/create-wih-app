@@ -1,3 +1,7 @@
+> [!WARNING]
+> Since the Svelte 5 release is out and [the new `sv`](https://github.com/sveltejs/cli) has been released, this project is no longer relevant.
+> `sv` has 90%+ of the features of this package, and is official and community-open.
+
 # create-wih-app
 
 ![NPM Version](https://img.shields.io/npm/v/create-wih-app)
